@@ -1,6 +1,6 @@
 from http import HTTPStatus as status
 from fastapi import FastAPI, Request, Response
-from fastapi.responses import PlainTextResponse
+from fastapi.responses import PlainTextResponse, JSONResponse
 from telegram import Update
 from telegram.ext import Application, ContextTypes, CommandHandler
 import uvicorn
@@ -46,17 +46,18 @@ async def health() -> PlainTextResponse:
 
 
 @app.get("/getme")
-async def get_me() -> Response:
+async def get_me() -> JSONResponse:
     logging.info(config.BOT_TOKEN)
-    return Response(content={"message": "ok"}, status_code=start.OK)
+    return JSONResponse(content={"token": config.BOT_TOKEN}, status_code=status.OK)
 
 
-@app.route("/webhook", methods=["POST", "GET"])
+@app.post("/")
 async def process_update(request: Request) -> Response:
     req = await request.json()
+    logging.info(req)
     update = Update.de_json(data=req, bot=ptb.bot)
     await ptb.process_update(update)
-    return Response(content=req, status_code=status.OK)
+    return Response(status_code=status.OK)
 
 
 if __name__ == "__main__":
