@@ -1,5 +1,6 @@
 from http import HTTPStatus as status
 from fastapi import FastAPI, Request, Response
+from fastapi.responses import PlainTextResponse
 from telegram import Update
 from telegram.ext import Application, ContextTypes, CommandHandler
 import uvicorn
@@ -35,6 +36,13 @@ async def lifespan(_: FastAPI):
 
 
 app = FastAPI(lifespan=lifespan)
+
+
+@app.get("/healthcheck")
+async def health() -> PlainTextResponse:
+    return PlainTextResponse(
+        content="The bot is still running fine :)", status_code=status.OK
+    )
 
 
 @app.post("/")
