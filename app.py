@@ -45,12 +45,6 @@ async def health() -> PlainTextResponse:
     )
 
 
-@app.get("/getme")
-async def get_me() -> JSONResponse:
-    logging.info(config.BOT_TOKEN)
-    return JSONResponse(content={"token": config.BOT_TOKEN}, status_code=status.OK)
-
-
 @app.post("/")
 async def process_update(request: Request) -> Response:
     req = await request.json()
