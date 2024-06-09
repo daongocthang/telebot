@@ -12,7 +12,7 @@
   "rewrites": [
     {
       "src": "/(.*)",
-      "dest": "app.py"
+      "destination": "app.py"
     }
   ]
 }
