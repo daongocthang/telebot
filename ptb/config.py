@@ -6,5 +6,6 @@ load_dotenv()
 has_env = getenv("ENV") is not None
 
 BOT_TOKEN = getenv("BOT_TOKEN")
-BOT_HOST = getenv("BOT_HOST")
+HOST = getenv("BOT_HOST")
+PORT = int(getenv("PORT"))
 WEBHOOK_URL = getenv("WEBHOOK_URL")
