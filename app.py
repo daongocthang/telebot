@@ -47,15 +47,16 @@ async def health() -> PlainTextResponse:
 
 @app.get("/getme")
 async def get_me() -> Response:
-    return Response(content={"token": config.BOT_TOKEN}, status_code=start.OK)
+    logging.info(config.BOT_TOKEN)
+    return Response(content={"message": "ok"}, status_code=start.OK)
 
 
-@app.post("/webhook")
+@app.route("/webhook", methods=["POST", "GET"])
 async def process_update(request: Request) -> Response:
     req = await request.json()
     update = Update.de_json(data=req, bot=ptb.bot)
     await ptb.process_update(update)
-    return Response(status_code=status.OK)
+    return Response(content=req, status_code=status.OK)
 
 
 if __name__ == "__main__":
