@@ -45,6 +45,11 @@ async def health() -> PlainTextResponse:
     )
 
 
+@app.get("/getme")
+async def get_me() -> Response:
+    return Response(content={"token": config.BOT_TOKEN}, status_code=start.OK)
+
+
 @app.post("/webhook")
 async def process_update(request: Request) -> Response:
     req = await request.json()
