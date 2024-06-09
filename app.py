@@ -55,6 +55,6 @@ async def process_update(request: Request):
 
 if __name__ == "__main__":
     try:
-        uvicorn.run(app, host="127.0.0.1", port=8080, use_colors=False)
+        uvicorn.run(app, host="0.0.0.0", port=80, use_colors=False)
     except KeyboardInterrupt:
         logging.info("Exit.")
