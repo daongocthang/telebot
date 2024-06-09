@@ -3,7 +3,7 @@ from fastapi import FastAPI, Request, Response
 from telegram import Update
 from telegram.ext import Application, ContextTypes, CommandHandler
 import uvicorn
-from telebot import config
+from ptb import config
 from contextlib import asynccontextmanager
 import logging
 
