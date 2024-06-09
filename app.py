@@ -29,7 +29,7 @@ ptb.add_handler(CommandHandler("start", start))
 @asynccontextmanager
 async def lifespan(_: FastAPI):
     await ptb.bot.set_webhook(
-        url=f"{config.WEBHOOK_URL}/wenhook", allowed_updates=Update.ALL_TYPES
+        url=f"{config.WEBHOOK_URL}/webhook", allowed_updates=Update.ALL_TYPES
     )
     async with ptb:
         await ptb.start()
