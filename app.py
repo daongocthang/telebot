@@ -28,7 +28,9 @@ ptb.add_handler(CommandHandler("start", start))
 
 @asynccontextmanager
 async def lifespan(_: FastAPI):
-    await ptb.bot.set_webhook(config.WEBHOOK_URL)
+    await ptb.bot.set_webhook(
+        url=f"{config.WEBHOOK_URL}/wenhook", allowed_updates=Update.ALL_TYPES
+    )
     async with ptb:
         await ptb.start()
         yield
@@ -45,10 +47,9 @@ async def health() -> PlainTextResponse:
     )
 
 
-@app.post("/")
+@app.post("/webhook")
 async def process_update(request: Request) -> Response:
     req = await request.json()
-    logging.info(req)
     update = Update.de_json(data=req, bot=ptb.bot)
     await ptb.process_update(update)
     return Response(status_code=status.OK)
@@ -56,6 +57,6 @@ async def process_update(request: Request) -> Response:
 
 if __name__ == "__main__":
     try:
-        uvicorn.run(app, host=config.HOST, port=config.PORT, use_colors=False)
+        uvicorn.run(app, host="127.0.0.1", port=8080, use_colors=False)
     except KeyboardInterrupt:
         logging.info("exit")
