@@ -45,8 +45,8 @@ async def health() -> PlainTextResponse:
     )
 
 
-@app.post("/")
-async def process_update(request: Request):
+@app.post("/webhook")
+async def process_update(request: Request) -> Response:
     req = await request.json()
     update = Update.de_json(data=req, bot=ptb.bot)
     await ptb.process_update(update)
@@ -55,6 +55,6 @@ async def process_update(request: Request):
 
 if __name__ == "__main__":
     try:
-        uvicorn.run(app, host="0.0.0.0", port=80, use_colors=False)
+        uvicorn.run(app, host="127.0.0.1", port=8080, use_colors=False)
     except KeyboardInterrupt:
-        logging.info("Exit.")
+        logging.info("exit")
