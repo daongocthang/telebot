@@ -1,7 +1,6 @@
 from ast import literal_eval
-from collections import defaultdict
 from copy import deepcopy
-import os
+from ptb import config
 from typing import Dict, Any
 
 import firebase_admin
@@ -33,8 +32,8 @@ class FirebasePersistence(BasePersistence):
 
     @classmethod
     def from_env(cls, **kwargs):
-        credentials = os.getenv("FIREBASE_CREDENTIALS")
-        database_url = os.getenv("FIREBASE_URL")
+        credentials = config.FIREBASE_CREDENTIALS
+        database_url = config.FIREBASE_URL
         return cls(url=database_url, credentials=credentials, **kwargs)
 
     @staticmethod
