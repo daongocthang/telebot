@@ -1,6 +1,6 @@
-from telegram.ext import Application, CommandHandler
-from . import callback
+from telegram.ext import Application
+from . import command
 
 
 def register(application: Application) -> None:
-    application.add_handler(CommandHandler("start", callback.start))
+    application.add_handlers(handlers=command.handlers)
