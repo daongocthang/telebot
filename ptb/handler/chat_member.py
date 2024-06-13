@@ -15,10 +15,10 @@ async def greeting(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     cause_name = update.chat_member.from_user.mention_html()
     member_name = update.chat_member.new_chat_member.user.mention_html()
 
-    joining = not was_member and is_member
-    # leaving = was_member and not is_member
+    has_joined = not was_member and is_member
+    # has_left = was_member and not is_member
 
-    if joining:
+    if has_joined:
         emoji_list = [emoji.PARTY_POPPER, emoji.PARTYING_FACE, emoji.CONFETTI_BALL]
 
         await update.effective_chat.send_message(random.choice(emoji_list))
