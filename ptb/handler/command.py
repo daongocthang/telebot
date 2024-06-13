@@ -46,4 +46,4 @@ async def show(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text("")
 
 
-handlers = [CommandHandler(["start", "help"], start), CommandHandler("clear", clear)]
+handlers = [CommandHandler(["start", "help"], start)]
