@@ -9,6 +9,33 @@ from firebase_admin.db import Reference
 from telegram.ext import BasePersistence, PersistenceInput
 
 
+class FirebaseDatabase:
+    def __init__(self, url: str, credentials: dict) -> None:
+        cred = firebase_admin.credentials.Certificate(credentials)
+        firebase_admin.initialize_app(cred, {"databaseURL": url})
+        self.__db = db.reference("persistence")
+
+    def get(self):
+        data = self.__db.get() or {}
+        output = {}
+        for k, v in data.items():
+            output[int(k) if k.isdigit() else k] = v
+
+        return deepcopy(output)
+
+    def update(self, k: int | str, v: Any) -> None:
+        self.__db.child(k).update(v)
+
+    def drop(self, k: int | str):
+        self.__db.child(k).delete()
+
+    @classmethod
+    def from_env(cls, **kwargs):
+        credentials = config.FIREBASE_CREDENTIALS
+        database_url = config.FIREBASE_URL
+        return cls(url=database_url, credentials=credentials, **kwargs)
+
+
 class FirebasePersistence(BasePersistence):
     def __init__(
         self,

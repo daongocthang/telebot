@@ -1,11 +1,11 @@
 from dataclasses import asdict, dataclass
 import logging
 import re
-from typing import Any, Mapping, NamedTuple
 from telegram import Update
 from telegram.ext import ContextTypes, CommandHandler
 
 from ptb.db import dbutils
+from ptb.db.firebase import FirebaseDatabase
 from ptb.utils import emoji
 
 from ptb import admin_only
@@ -13,29 +13,20 @@ from ptb import admin_only
 
 @dataclass
 class DataInput:
-    message_id: int
-    ticket: str
-    todict = asdict
-
-    def map(self, data: dict) -> None:
-        data[self.ticket] = self.message_id
-
-
-class DataResult(NamedTuple):
     chat_id: int | str
     message_id: int
     mention: str
+    todict = asdict
 
 
-def parse(chat_data: Mapping) -> dict[str, Any]:
-    return {}
+db = FirebaseDatabase.from_env()
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text("Welcome to Python Telegram Bot")
 
 
-async def support(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def add(update: Update, context: ContextTypes.DEFAULT_TYPE):
     try:
         chat_data = dbutils.ChatData(context)
         pattern = re.compile(r"^TNBH[0-9]{7}$")
@@ -43,9 +34,14 @@ async def support(update: Update, context: ContextTypes.DEFAULT_TYPE):
         logging.info(ticket)
         ticket = ticket.strip()
         if pattern.match(ticket):
-            chat_data.update(
-                update.message.chat_id,
-                {update.message.id, ticket},
+            # push to db
+            db.update(
+                ticket,
+                DataInput(
+                    chat_id=update.message.chat_id,
+                    message_id=update.message.id,
+                    mention=update.effective_user.mention_html(),
+                ).todict(),
             )
             await update.message.reply_html(f"{emoji.OK_HAND} Bạn chờ BHKV xử lý nhé!")
         else:
@@ -56,9 +52,7 @@ async def support(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 @admin_only
 async def show(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    chat_data = dbutils.ChatData(context)
-    resp = await chat_data.get()
-    await update.message.reply_text(resp)
+    await update.message.reply_text(db.get())
 
 
 @admin_only
@@ -69,6 +63,6 @@ async def rem(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 handlers = [
     CommandHandler(["start", "help"], start),
-    CommandHandler("add", support),
+    CommandHandler("add", add),
     CommandHandler("show", show),
 ]
