@@ -1,20 +1,14 @@
 import uvicorn
-import logging
-from ptb import api
+from ptb import api, config
 
-# Enable logging
-logging.basicConfig(
-    format="[%(asctime)s %(levelname)s] %(name)s - %(message)s", level=logging.INFO
-)
-# set higher logging level for httpx to avoid all GET and POST requests being logged
-logging.getLogger("httpx").setLevel(logging.WARNING)
-
-logger = logging.getLogger(__name__)
+logger = config.get_logger(__name__)
 
 app = api.creat_app()
 
 if __name__ == "__main__":
     try:
-        uvicorn.run(app, host="127.0.0.1", port=8080, use_colors=False)
+        uvicorn.run(
+            app, host="127.0.0.1", port=8080, use_colors=False, timeout_keep_alive=60
+        )
     except KeyboardInterrupt:
-        logging.info("Exit")
+        logger.info("Exit")

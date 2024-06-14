@@ -1,8 +1,6 @@
-import functools
-import logging
 from typing import Optional
 
-from telegram import ChatMember, ChatMemberUpdated, Update
+from telegram import ChatMember, ChatMemberUpdated
 
 
 def is_admin(status: str) -> bool:
@@ -10,29 +8,6 @@ def is_admin(status: str) -> bool:
         ChatMember.ADMINISTRATOR,
         ChatMember.OWNER,
     ]
-
-
-def admin_only(func):
-    @functools.wraps(func)
-    async def wrapper(*args, **kwargs):
-        try:
-            for a in args:
-                if isinstance(a, Update):
-                    update = a  # type: Update
-                    break
-            if not update:
-                raise TypeError("Argument update is not found.")
-
-            user_id = await update.message.from_user.id
-            member = update.effective_chat.get_member(user_id)  # type: ChatMember
-            if member.status and is_admin(member.status):
-                return await func(*args, **kwargs)
-            else:
-                raise PermissionError("Allow for group admin only.")
-        except (TypeError, PermissionError) as e:
-            logging.error(e)
-
-    return wrapper
 
 
 def status_change(chat_member_update: ChatMemberUpdated) -> Optional[tuple[bool, bool]]:

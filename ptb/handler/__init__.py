@@ -1,9 +1,9 @@
-from telegram.ext import Application, CommandHandler
-from . import command, chat_member
+from telegram.ext import Application
 
-MESSAGE = -1
-COMMAND, CHAT_MEMBER = range(2)
+from . import chat_member, command
 
 
 def register(application: Application) -> None:
-    application.add_handler(CommandHandler("start", command.handlers))
+    application.add_handlers(chat_member.handlers)
+    for handler in command.handlers:
+        application.add_handler(handler)

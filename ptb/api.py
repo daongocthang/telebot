@@ -10,9 +10,10 @@ from typing import AsyncGenerator
 
 from ptb.db.firebase import FirebasePersistence
 
+
 # build a Python Telegram Bot
 fb_persistence = FirebasePersistence.from_env()
-ptb = Application.builder().token(config.BOT_TOKEN).build()
+ptb = Application.builder().persistence(fb_persistence).token(config.BOT_TOKEN).build()
 handler.register(ptb)
 
 
