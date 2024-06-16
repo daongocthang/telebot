@@ -9,6 +9,7 @@ from ptb.interfaces import Intent
 from ptb.types import ChatInfo, admin_only
 from ptb.config import dbase
 
+message_empty_data: Final[str] = "Không có dữ liệu."
 message_success: Final[str] = f"{emoji.OK_HAND} Bạn chờ BHKV xử lý nhé!"
 message_failure: Final[str] = f"Mã bảo hành không đúng {emoji.NO_ENTRY}"
 message_error: Final[str] = f"Không có mã bảo hành {emoji.DISAPPOINT_FACE}"
@@ -70,7 +71,8 @@ class ShowCommandHandler(Intent[CommandHandler]):
 
     @admin_only
     async def _get_command(self, update: Update, _: ContextTypes.DEFAULT_TYPE):
-        await update.message.reply_text("\n".join(dbase.get().keys()))
+        data = dbase.get().keys()
+        await update.message.reply_text("\n".join(data) if data else message_empty_data)
 
     def handler(self) -> CommandHandler:
         return CommandHandler("show", self._get_command)
