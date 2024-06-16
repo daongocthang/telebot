@@ -4,18 +4,20 @@ from fastapi import FastAPI, Request, Response
 from fastapi.responses import PlainTextResponse
 from telegram import Update
 from telegram.ext import Application
-from ptb import config
-from ptb import handler
+from ptb import config, member
 from typing import AsyncGenerator
 
-
-# build a Python Telegram Bot
-ptb = Application.builder().token(config.BOT_TOKEN).build()
-handler.register(ptb)
+from ptb.executor import IntentExecutor
 
 
 # create a fastapi app
 def creat_app() -> FastAPI:
+    # build a Python Telegram Bot
+    ptb = Application.builder().token(config.BOT_TOKEN).build()
+    ptb.add_handler(member.handler)
+    executor = IntentExecutor()
+    executor.register("intents", ptb)
+
     @asynccontextmanager
     async def lifespan(_: FastAPI) -> AsyncGenerator:
         await ptb.bot.set_webhook(

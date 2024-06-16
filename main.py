@@ -1,7 +1,10 @@
+import logging
 import uvicorn
-from ptb import api, config
+from ptb import api, utils
 
-logger = config.get_logger(__name__)
+utils.set_logging_httpx()
+logger = logging.getLogger(__name__)
+
 
 app = api.creat_app()
 
