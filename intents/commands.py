@@ -1,4 +1,5 @@
 import logging
+import random
 import re
 from typing import Dict, Final
 from telegram import Update
@@ -10,7 +11,9 @@ from ptb.types import ChatInfo, admin_only
 from ptb.config import dbase
 
 message_empty_data: Final[str] = "Không có dữ liệu."
-message_success: Final[str] = f"{emoji.OK_HAND} Bạn chờ BHKV xử lý nhé!"
+message_success: Final[str] = (
+    random.choice([emoji.THUMB_UP, emoji.OK_HAND]) + " {0} chờ BHKV xử lý nhé!"
+)
 message_failure: Final[str] = f"Mã bảo hành không đúng {emoji.NO_ENTRY}"
 message_error: Final[str] = f"Không có mã bảo hành {emoji.DISAPPOINT_FACE}"
 message_help: Final[Dict[str, str]] = {
@@ -45,6 +48,7 @@ class SupportCommandHandler(Intent[CommandHandler]):
             pattern = re.compile(r"^TNBH[0-9]{7}$")
             ticket = context.args[0]
             ticket = ticket.strip()
+            user_mention = update.effective_user.mention_html()
             if pattern.match(ticket):
                 # push to db
                 dbase.update(
@@ -52,10 +56,10 @@ class SupportCommandHandler(Intent[CommandHandler]):
                     ChatInfo(
                         chat_id=update.message.chat_id,
                         message_id=update.message.id,
-                        mention=update.effective_user.mention_html(),
+                        mention=user_mention,
                     ).todict(),
                 )
-                await update.message.reply_html(message_success)
+                await update.message.reply_html(message_success.format(user_mention))
             else:
                 await update.message.reply_html(message_failure)
         except IndexError:

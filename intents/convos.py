@@ -24,7 +24,7 @@ message_send_failure: Final[str] = (
     + "\n{1} bảo CH tiếp nhận trước."
 )
 message_send_success: Final[str] = (
-    emoji.BACKHAND_INDEX_POINTING_RIGHT + " {0} đã trả CM, {1} lh CH để xác nhận."
+    " {0} đã trả CM " + emoji.PARTY_POPPER + "\n{1} lh CH để xác nhận."
 )
 
 stage0, stage1 = range(2)
