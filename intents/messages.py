@@ -40,15 +40,26 @@ class DefaultMessage(Intent[MessageHandler]):
         highest_score = max(collector)
         return highest_score, collector.index(highest_score)
 
-    def reply(self, update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
+    def get_response(self, text: str) -> str | None:
+        score, index = self.best_response(text)
+        if score > 0:
+            return knowledge[index]["response"]
+
+    async def reply(self, update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
         text = update.message.text
         chat_type = update.message.chat.type
         if chat_type == "group":
-            if re.match(r"^.?" + config.BOT_NAME + r"*", text):
-                pass
+            if config.BOT_NAME in text:
+                new_text = text.replace(config.BOT_NAME, "").strip()
+                response = self.get_response(new_text)
+            else:
+                return
 
         else:
-            pass
+            response = self.get_response(text)
+
+        if response:
+            await update.message.reply_text(response)
 
     def handler(self) -> MessageHandler:
         return MessageHandler(filters.TEXT & ~filters.COMMAND, self.reply)
