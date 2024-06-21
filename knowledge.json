@@ -1,0 +1,26 @@
+[
+    {
+        "intent":"greeting",
+        "examples":[
+            "hi",
+            "hello",
+            "hey"
+        ],
+        "keywords":[
+
+        ],
+        "response":"Hello"
+    },
+    {
+        "intent":"bye",
+        "examples":[
+            "see you",
+            "goodbye",
+            "bye"
+        ],
+        "keywords":[
+            
+        ],
+        "response":"See you later!"
+    }
+]
