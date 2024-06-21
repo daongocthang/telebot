@@ -1,11 +1,14 @@
 import json
 import re
-from typing import Tuple
+from typing import Final, Tuple
 
 from telegram import Update
 from ptb.interfaces import Intent
 from telegram.ext import ContextTypes, MessageHandler, filters
 from ptb import config
+
+message_intro: Final[str] = "Tôi là {0}"
+
 
 with open("knowledge.json", "r", encoding="utf8") as f:
     knowledge = json.load(f)
@@ -51,7 +54,11 @@ class DefaultMessage(Intent[MessageHandler]):
         if chat_type == "group":
             if config.BOT_NAME in text:
                 new_text = text.replace(config.BOT_NAME, "").strip()
-                response = self.get_response(new_text)
+                response = (
+                    message_intro.format(config.BOT_NAME)
+                    if new_text == ""
+                    else self.get_response(new_text)
+                )
             else:
                 return
 
