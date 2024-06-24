@@ -33,8 +33,12 @@ class HelpCommandHandler(Intent[CommandHandler]):
 
     async def _help_command(self, update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
         chat_type = update.message.chat.type
-        mention = update.effective_user.mention_html() if chat_type == "private" else ""
-        await update.message.reply_html(message_help.get(chat_type).format(mention))
+        if chat_type == "group":
+            text = message_help.get(chat_type)
+        else:
+            mention = update.effective_user.mention_html()
+            text = message_help.get(chat_type).format(mention)
+        await update.message.reply_html(text)
 
     def handler(self) -> CommandHandler:
         return CommandHandler(["start", "help"], self._help_command)
@@ -87,7 +91,7 @@ class ShowCommandHandler(Intent[CommandHandler]):
 
 class WhoAmI(Intent[CommandHandler]):
     def name(self) -> str:
-        return "who_am_i"
+        return "whoami_command"
 
     async def _command(self, update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
         chat_id = update.message.chat_id
@@ -97,7 +101,7 @@ class WhoAmI(Intent[CommandHandler]):
             logger.warning(f"`{self.name()}` is denied in a group")
 
     def handler(self) -> CommandHandler:
-        return CommandHandler("whoami_command", self._command)
+        return CommandHandler("whoami", self._command)
 
 
 class DeprecatedCommand(Intent[MessageHandler]):
