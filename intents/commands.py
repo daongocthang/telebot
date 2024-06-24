@@ -18,7 +18,7 @@ message_failure: Final[str] = f"Mã bảo hành không đúng {emoji.NO_ENTRY}"
 message_error: Final[str] = f"Không có mã bảo hành {emoji.DISAPPOINT_FACE}"
 message_help: Final[Dict[str, str]] = {
     "private": '{0} vui lòng tham gia nhóm <a href="https://t.me/+AlE4kevmxlM5OWRl">Hỗ trợ Bảo hành</a>',
-    "group": "{0} vui lòng nhập cú pháp sau\n/tra_ht <code>MA_BAO_HANH</code>",
+    "group": "Bạn vui lòng nhập cú pháp sau\n/tra_ht <code>MA_BAO_HANH</code>",
 }
 
 logger = logging.getLogger(__name__)
@@ -31,7 +31,9 @@ class HelpCommandHandler(Intent[CommandHandler]):
     async def _help_command(self, update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
         chat_type = update.message.chat.type
         mention = update.effective_user.mention_html()
-        await update.message.reply_html(message_help.get(chat_type).format(mention))
+        await update.message.reply_html(
+            message_help.get(chat_type).format(mention if mention else "")
+        )
 
     def handler(self) -> CommandHandler:
         return CommandHandler(["start", "help"], self._help_command)
