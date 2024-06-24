@@ -21,7 +21,7 @@ message_help: Final[Dict[str, str]] = {
     "group": "Bạn có thể gửi cú pháp sau:\n\n/traht <code>MA_BAO_HANH</code> - trả hệ thống không chuyển vật lý",
 }
 message_deprecated: Final[str] = (
-    "Cú pháp này không còn dùng nữa. Bạn gửi /help để xem hướng dẫn."
+    f"Cú pháp này không còn dùng nữa {emoji.DISAPPOINT_FACE}\n\nGửi /help để xem hướng dẫn."
 )
 
 logger = logging.getLogger(__name__)
