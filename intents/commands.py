@@ -18,8 +18,11 @@ message_failure: Final[str] = f"Mã bảo hành không đúng {emoji.NO_ENTRY}"
 message_error: Final[str] = f"Không có mã bảo hành {emoji.DISAPPOINT_FACE}"
 message_help: Final[Dict[str, str]] = {
     "private": '{0} vui lòng tham gia nhóm <a href="https://t.me/+AlE4kevmxlM5OWRl">Hỗ trợ Bảo hành</a>',
-    "group": "Bạn vui lòng nhập cú pháp sau\n/tra_ht <code>MA_BAO_HANH</code>",
+    "group": "Bạn có thể gửi cú pháp sau:\n\n/traht <code>MA_BAO_HANH</code> - trả hệ thống không chuyển vật lý",
 }
+message_deprecated: Final[str] = (
+    "Cú pháp này không còn dùng nữa. Bạn gửi /help để xem hướng dẫn."
+)
 
 logger = logging.getLogger(__name__)
 
@@ -104,9 +107,9 @@ class DeprecatedCommand(Intent[MessageHandler]):
         return "deprecated_command"
 
     async def _callback(self, update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
-        await update.message.reply_html(
-            message_help.get("group").format(update.effective_user.mention_html())
-        )
+        await update.message.reply_html(message_deprecated)
 
     def handler(self) -> MessageHandler:
-        return MessageHandler(filters.Regex(r"^/?hotro_tra_ht"), self._callback)
+        return MessageHandler(
+            filters.Regex(r"^/?(hotro_tra_ht|tra_ht)"), self._callback
+        )
