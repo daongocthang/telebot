@@ -28,7 +28,9 @@ class HelpCommandHandler(Intent[CommandHandler]):
     async def _help_command(self, update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
         chat_type = update.message.chat.type
         mention = update.effective_user.mention_html()
-        await update.message.reply_html(message_help.get(chat_type).format(mention))
+        await update.message.reply_html(
+            message_help.get(chat_type).format(mention if mention else "")
+        )
 
     def handler(self) -> CommandHandler:
         return CommandHandler(["start", "help"], self._help_command)
@@ -98,9 +100,7 @@ class DeprecatedCommand(Intent[MessageHandler]):
         return "deprecated_command"
 
     async def _callback(self, update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
-        await update.message.reply_html(
-            message_help.get("group").format(update.effective_user.mention_html())
-        )
+        await update.message.reply_html(message_help.get("group"))
 
     def handler(self) -> MessageHandler:
         return MessageHandler(filters.Regex(r"^/?hotro_tra_ht"), self._callback)
