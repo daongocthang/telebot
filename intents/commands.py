@@ -15,7 +15,7 @@ message_failure: Final[str] = f"Mã bảo hành không đúng {emoji.NO_ENTRY}"
 message_error: Final[str] = f"Không có mã bảo hành {emoji.DISAPPOINT_FACE}"
 message_help: Final[Dict[str, str]] = {
     "private": '{0} vui lòng tham gia nhóm <a href="https://t.me/+AlE4kevmxlM5OWRl">Hỗ trợ Bảo hành</a>',
-    "group": "{0} vui lòng nhập cú pháp sau\n/tra_ht <code>MA_BAO_HANH</code>",
+    "group": "Bạn vui lòng nhập cú pháp sau\n/tra_ht <code>MA_BAO_HANH</code>",
 }
 
 logger = logging.getLogger(__name__)
