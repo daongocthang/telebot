@@ -71,7 +71,7 @@ class SupportCommandHandler(Intent[CommandHandler]):
             await update.message.reply_html(message_error)
 
     def handler(self) -> CommandHandler:
-        return CommandHandler("tra_ht", self._update_command)
+        return CommandHandler("traht", self._update_command)
 
 
 class ShowCommandHandler(Intent[CommandHandler]):
@@ -99,7 +99,7 @@ class WhoAmI(Intent[CommandHandler]):
             logger.warning(f"`{self.name()}` is denied in a group")
 
     def handler(self) -> CommandHandler:
-        return CommandHandler("whoami", self._command)
+        return CommandHandler("whoami_command", self._command)
 
 
 class DeprecatedCommand(Intent[MessageHandler]):
