@@ -39,7 +39,7 @@ class HelpCommandHandler(Intent[CommandHandler]):
             mention = update.effective_user.mention_html()
             text = message_help.get("private").format(mention)
             await update.message.reply_html(text)
-        elif chat_type == "group":
+        else:
             text = message_help.get("group")
             await update.message.reply_html(text)
 
