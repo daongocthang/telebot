@@ -33,10 +33,8 @@ class HelpCommandHandler(Intent[CommandHandler]):
 
     async def _help_command(self, update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
         chat_type = update.message.chat.type
-        mention = update.effective_user.mention_html()
-        await update.message.reply_html(
-            message_help.get(chat_type).format(mention if mention else "")
-        )
+        mention = update.effective_user.mention_html() if chat_type == "private" else ""
+        await update.message.reply_html(message_help.get(chat_type).format(mention))
 
     def handler(self) -> CommandHandler:
         return CommandHandler(["start", "help"], self._help_command)
