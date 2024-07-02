@@ -19,7 +19,7 @@ class Intent(Generic[T]):
     def handler(self) -> T:
         raise NotImplementedError("An intent must implement its handler method")
 
-    async def end_convo(update: Update, _: ContextTypes.DEFAULT_TYPE) -> int:
+    async def end_convo(self, update: Update, _: ContextTypes.DEFAULT_TYPE) -> int:
         return ConversationHandler.END
 
     def __str__(self) -> str:
